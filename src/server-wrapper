@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+. "$SNAP/bin/load-env"
+
+exec "$SNAP/jellyfin/jellyfin" \
+  --datadir "$JELLYFIN_DATA_DIR" \
+  --configdir "$JELLYFIN_CONFIG_DIR" \
+  --cachedir "$JELLYFIN_CACHE_DIR" \
+  --logdir "$JELLYFIN_LOG_DIR" \
+  --webdir "$SNAP/jellyfin/jellyfin-web" \
+  --ffmpeg "$SNAP/usr/bin/ffmpeg" \
+  --service

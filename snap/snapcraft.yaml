@@ -1,0 +1,72 @@
+name: jellyfin
+title: Jellyfin
+summary: The Free Software Media System
+description: |
+  Jellyfin is a free software media system that puts you in control of
+  managing and streaming your media library, without any licensing costs
+  or invasive telemetry.
+
+  This snap bundles the official self-contained Jellyfin server build
+  (server + built-in web client) and the jellyfin-ffmpeg transcoder.
+  There is no Docker or other container runtime inside the snap.
+
+  After installation Jellyfin is available at http://localhost:8096 —
+  the first-run setup wizard creates the admin account and lets you add
+  media libraries. Server data lives under /var/snap/jellyfin/common;
+  configuration lives under /var/snap/jellyfin/current/config.
+
+  Media libraries: strict confinement means Jellyfin can only read paths
+  it has been granted access to. Out of the box it can read anything
+  under $SNAP_COMMON/media (a convenience default), the user's home
+  directories, and removable media (/media, /mnt, /run/media). Libraries
+  on other host paths need the system-files interface connected manually
+  (see the README).
+license: GPL-2.0-only
+source-code: https://github.com/jellyfin/jellyfin
+website: https://jellyfin.org
+issues: https://github.com/kenvandine/jellyfin-snap/issues
+
+adopt-info: jellyfin
+base: core24
+confinement: strict
+grade: stable
+
+platforms:
+  amd64:
+
+apps:
+  jellyfin:
+    command: bin/server-wrapper
+    daemon: simple
+    restart-condition: on-failure
+    plugs: [network, network-bind, removable-media, home]
+
+parts:
+  jellyfin:
+    # Official self-contained portable build (server + bundled jellyfin-web
+    # client). Preferred over extracting the linuxserver/jellyfin Docker
+    # image per the docker-compose-to-snap skill's source-preference order:
+    # this *is* the upstream release artifact, not a container payload.
+    plugin: dump
+    source: https://repo.jellyfin.org/files/server/linux/stable/v10.11.11/amd64/jellyfin_10.11.11-amd64.tar.xz
+    source-checksum: sha256/7e94666f5ffa08f3110eb3456e24210a720c9d7a04ebb0a23b775155451c1631
+    override-build: |
+      craftctl default
+      craftctl set version="10.11.11"
+
+  jellyfin-ffmpeg:
+    # jellyfin's own portable ffmpeg build (patched for the hw-accel paths
+    # Jellyfin's transcoder expects) rather than the Ubuntu archive's
+    # ffmpeg, matching what the upstream Docker image ships.
+    plugin: dump
+    source: https://repo.jellyfin.org/files/ffmpeg/linux/latest-7.x/amd64/jellyfin-ffmpeg_7.1.4-3_portable_linux64-gpl.tar.xz
+    source-checksum: sha256/cab9ff40a47e4232d231e4eb7e4e85fabfeec56c6905266bc94291fc0881f83f
+    organize:
+      ffmpeg: usr/bin/ffmpeg
+      ffprobe: usr/bin/ffprobe
+
+  scripts:
+    plugin: dump
+    source: src
+    organize:
+      "*": bin/

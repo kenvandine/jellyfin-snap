@@ -1,0 +1,7 @@
+# Sourced by server-wrapper. Wiring paths only — Jellyfin has no separate
+# services to coordinate with (SQLite is embedded), so unlike a multi-daemon
+# snap there's nothing here to wait on.
+export JELLYFIN_DATA_DIR="$SNAP_COMMON/data"       # library DB, metadata images
+export JELLYFIN_CONFIG_DIR="$SNAP_DATA/config"     # config.xml, network.xml, users
+export JELLYFIN_CACHE_DIR="$SNAP_COMMON/cache"
+export JELLYFIN_LOG_DIR="$SNAP_COMMON/log"

@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+
+mkdir -p "$SNAP_DATA/config" "$SNAP_COMMON/data" "$SNAP_COMMON/cache" \
+         "$SNAP_COMMON/log" "$SNAP_COMMON/media"
