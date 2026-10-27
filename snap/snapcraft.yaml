@@ -48,11 +48,11 @@ parts:
     # image per the docker-compose-to-snap skill's source-preference order:
     # this *is* the upstream release artifact, not a container payload.
     plugin: dump
-    source: https://repo.jellyfin.org/files/server/linux/stable/v10.11.11/amd64/jellyfin_10.11.11-amd64.tar.xz
-    source-checksum: sha256/7e94666f5ffa08f3110eb3456e24210a720c9d7a04ebb0a23b775155451c1631
+    source: https://repo.jellyfin.org/files/server/linux/stable/v12.4/amd64/jellyfin_12.4-amd64.tar.xz
+    source-checksum: sha256/29831bfda5699018d1d3058085c6b837fb31da34b5eab3c98259aa12da80375f
     override-build: |
       craftctl default
-      craftctl set version="10.11.11"
+      craftctl set version="12.4"
 
   jellyfin-ffmpeg:
     # jellyfin's own portable ffmpeg build (patched for the hw-accel paths
